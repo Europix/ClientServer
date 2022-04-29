@@ -1,17 +1,19 @@
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Server {
 	public void starServer(String[] args){
 		int List_Number;
 		int Max_Member;
-		if (Integer.parseInt(args[2]) <= 0 || Integer.parseInt(args[3]) <= 0){
+		if (Integer.parseInt(args[0]) <= 0 || Integer.parseInt(args[1]) <= 0){
 			System.out.println("Error: Invalid Arguments, Server will close.");
 			return;
 		}
-		List_Number = Integer.parseInt(args[2]); // Max lists
-		Max_Member = Integer.parseInt(args[3]); // Max members
+		List_Number = Integer.parseInt(args[0]); // Max lists
+		Max_Member = Integer.parseInt(args[1]); // Max members
 		ServerSocket server = null;
 		String[][] list = new String[List_Number+1][Max_Member+1];
 
@@ -27,18 +29,27 @@ public class Server {
 		Socket client;
 		while(true) {
 			try {
-				File file =new File("log.txt");
-				//if file doesnt exists, then create it
-				if(!file.exists()){
-					boolean success = file.createNewFile();
-				}
 				assert server != null;
 				client = server.accept();
 				InputStream is = client.getInputStream();
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				String line = br.readLine();
 				int count;
+				File file =new File("log.txt");
+				//if file doesnt exists, then create it
+				if(!file.exists()){
+					boolean success = file.createNewFile();
+				}
 				if (line != null) {
+					FileWriter fw = new FileWriter("log.txt",true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd '|' HH:mm:ss ");
+					Date date = new Date(System.currentTimeMillis());
+					String date_data = formatter.format(date);
+					String IP = client.getInetAddress().toString().substring(1); // Delete the prefix "/"
+					String log = date_data + '|' + IP + '|' + ' ' + line + '\n';
+					bw.write(log);
+					bw.close();
 					if (line.equals("totals")) {
 						PrintStream ps = new PrintStream(client.getOutputStream());
 						ps.printf("There are %d list(s), each with a maximum size of %d.\n", List_Number, Max_Member);

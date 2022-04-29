@@ -9,13 +9,12 @@ public class Client {
 		try {
 			client = new Socket("localhost",5000);
 			{
-				// str[0]: Java, str[1]: Client.
-				String str = String.valueOf(args[2]);
+				String str = String.valueOf(args[0]);
 				boolean b = !str.equals("totals") && !str.equals("list") && !str.equals("join");
 				if (!b) {
 					PrintStream ps = new PrintStream(client.getOutputStream());
 					if(str.equals("totals")){  // Valid arguments
-						if(args.length == 3) {
+						if(args.length == 1) {
 							ps.println(str);
 							InputStream is = client.getInputStream();
 							BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -34,10 +33,10 @@ public class Client {
 						}
 					}
 					if(str.equals("list")){
-						if(args.length == 4) { // Valid arguments
+						if(args.length == 2) { // Valid arguments
 							boolean flag = true;
 							try {
-								Integer.parseInt(args[2]);
+								Integer.parseInt(args[1]);
 							} catch (Exception e) {
 								System.out.println("Invalid Arguments For list Number!\n");
 								flag = false;
@@ -45,7 +44,7 @@ public class Client {
 							}
 							if (flag) {
 								ps.println(str);
-								for (int i=3; i< args.length; i++) {
+								for (int i=1; i< args.length; i++) {
 									String str1 = String.valueOf(args[i]);
 									ps.println(str1);
 								}
@@ -72,11 +71,11 @@ public class Client {
 						}
 					}
 					if(str.equals("join")){
-						if(args.length == 5) { // Join Requires 3 arguments.
+						if(args.length == 3) { // Join Requires 3 arguments.
 							InputStream is = client.getInputStream();
 							boolean flag = true;
 							try {
-								Integer.parseInt(args[2]);
+								Integer.parseInt(args[1]);
 							} catch (Exception e) {
 								System.out.println("Invalid Arguments for List Number!\n");
 								flag = false;
@@ -84,7 +83,7 @@ public class Client {
 							}
 							if(flag) {
 								ps.println(str);
-								for (int i = 3; i < args.length; i++) {
+								for (int i = 1; i < args.length; i++) {
 									String str1 = String.valueOf(args[i]);
 									ps.println(str1);
 								}
