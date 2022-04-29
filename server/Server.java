@@ -6,20 +6,23 @@ import java.util.Scanner;
 public class Server {
 	public void starServer(String[] args){
 		int List_Number;
-		List_Number = Integer.parseInt(args[0]); // Max lists
 		int Max_Member;
+		if (Integer.parseInt(args[0]) <= 0 || Integer.parseInt(args[1]) <= 0){
+			System.out.println("Error: Invalid Arguments, Server will close.");
+			return;
+		}
+		List_Number = Integer.parseInt(args[0]); // Max lists
 		Max_Member = Integer.parseInt(args[1]); // Max members
-		ServerSocket server=null;
+		ServerSocket server = null;
 		String[][] list = new String[List_Number+1][Max_Member+1];
 
 		try {
-
-			server = new ServerSocket(5000);
-			System.out.println("server started successfully");
+			server = new ServerSocket(5000); // New Server Started
+			//System.out.println("server started successfully");
 		} catch (IOException e1) {
 // TODO Auto-generated catch block
 			e1.printStackTrace();
-			System.out.println("Error: catch an Exception, Failed to initialize");
+			//System.out.println("Error: catch an Exception, Failed to initialize");
 		}
 
 		Socket client;
@@ -32,9 +35,7 @@ public class Server {
 				String line = br.readLine();
 				int count;
 				if (line != null) {
-					//System.out.println("client：" + line);
 					if (line.equals("totals")) {
-						//System.out.println("client's argument：" + line);
 						PrintStream ps = new PrintStream(client.getOutputStream());
 						ps.printf("There are %d list(s), each with a maximum size of %d.\n", List_Number, Max_Member);
 						try {
@@ -54,12 +55,16 @@ public class Server {
 						String para = br.readLine();
 						PrintStream ps = new PrintStream(client.getOutputStream());
 						int index = Integer.parseInt(para) - 1 ; // begin with 1
+						if(index < 0 || index >= List_Number){
+							ps.println("Invalid Parameter!");
+							continue;
+						}
 						for (int i = 0; i < Max_Member; i++) {
 							if (list[index][i] != null && list[index][i].length() != 0) {
 								ps.println(list[index][i]);
 							}
 						}
-						ps.println("\n");
+						ps.println("It_is_the_end"); // End mark.
 					}
 					if (line.equals("join")) {
 						try {
@@ -68,14 +73,19 @@ public class Server {
 							String name = br.readLine();
 							//System.out.println(name);
 							int index = Integer.parseInt(para) - 1 ; // Begin From 1
+							if(index < 0 || index >= List_Number){
+								ps.println("Invalid Parameter!");
+								continue;
+							}
 							int cnt = 0;
 							for (int i = 0; i < Max_Member; i++) {
 								if (list[index][i] != null && list[index][i].length() != 0)
 									cnt++;
 							}
-							if (cnt <= Max_Member) {
+							if (cnt < Max_Member) {
+								// name = name.replace("\"", "");
 								list[index][cnt] = name;
-								//System.out.println("qwq");
+								//System.out.println(cnt);
 								ps.println("Success!");
 							} else {
 								//System.out.println("qwqwq");
