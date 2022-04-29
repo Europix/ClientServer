@@ -56,7 +56,7 @@ public class Server {
 						int index = Integer.parseInt(para) - 1 ; // begin with 1
 						for (int i = 0; i < Max_Member; i++) {
 							if (list[index][i] != null && list[index][i].length() != 0) {
-								ps.println(list[Integer.parseInt(para)][i]);
+								ps.println(list[index][i]);
 							}
 						}
 						ps.println("\n");
