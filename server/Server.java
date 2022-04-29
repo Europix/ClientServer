@@ -1,18 +1,17 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 
 public class Server {
 	public void starServer(String[] args){
 		int List_Number;
 		int Max_Member;
-		if (Integer.parseInt(args[0]) <= 0 || Integer.parseInt(args[1]) <= 0){
+		if (Integer.parseInt(args[2]) <= 0 || Integer.parseInt(args[3]) <= 0){
 			System.out.println("Error: Invalid Arguments, Server will close.");
 			return;
 		}
-		List_Number = Integer.parseInt(args[0]); // Max lists
-		Max_Member = Integer.parseInt(args[1]); // Max members
+		List_Number = Integer.parseInt(args[2]); // Max lists
+		Max_Member = Integer.parseInt(args[3]); // Max members
 		ServerSocket server = null;
 		String[][] list = new String[List_Number+1][Max_Member+1];
 
@@ -28,6 +27,11 @@ public class Server {
 		Socket client;
 		while(true) {
 			try {
+				File file =new File("log.txt");
+				//if file doesnt exists, then create it
+				if(!file.exists()){
+					boolean success = file.createNewFile();
+				}
 				assert server != null;
 				client = server.accept();
 				InputStream is = client.getInputStream();
