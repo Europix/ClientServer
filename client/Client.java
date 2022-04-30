@@ -6,15 +6,15 @@ public class Client {
     private Socket client = null;
 
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         Client test = new Client();
-        test.startClient(args);
+        test.StartClient(args);
     }
 
-    public void startClient(String[] args) {
+    public void StartClient(String[] args) {
 
         try {
-            client = new Socket("localhost", 5000);
+            client = new Socket("localhost", 9000);
             {
                 String str = String.valueOf(args[0]);
                 boolean b = !str.equals("totals") && !str.equals("list") && !str.equals("join");

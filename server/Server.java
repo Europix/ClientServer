@@ -3,18 +3,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
-	static ExecutorService service = null;
+    static ExecutorService service = null;
+
     public static void main(String[] args) {
         Server test = new Server();
-		service = Executors.newFixedThreadPool(25); // Thread Pool fixed to 25.
-        service.submit(() -> test.startServer(args));
+        service = Executors.newFixedThreadPool(25); // Thread Pool fixed to 25.
+        service.submit(() -> test.StartServer(args));
         // test.startServer(args);
     }
 
-    public void startServer(String[] args) {
+    public void StartServer(String[] args) {
         int List_Number;
         int Max_Member;
         if (Integer.parseInt(args[0]) <= 0 || Integer.parseInt(args[1]) <= 0) {
@@ -27,7 +29,7 @@ public class Server {
         String[][] list = new String[List_Number + 1][Max_Member + 1];
 
         try {
-            server = new ServerSocket(5000); // New Server Started
+            server = new ServerSocket(9000); // New Server Started
             //System.out.println("server started successfully");
         } catch (IOException e1) {
 // TODO Auto-generated catch block
@@ -46,21 +48,21 @@ public class Server {
                 int count;
                 File file = new File("log.txt");
                 //if file doesnt exists, then create it
-				boolean success;
-				if (!file.exists()) {
+                boolean success;
+                if (!file.exists()) {
                     success = file.createNewFile();
-                    if(success){
-                    	System.out.println("Generating New Log File\n");
-					}
+                    if (success) {
+                        System.out.println("Generating New Log File\n");
+                    }
                 }
                 if (line != null) {
                     FileWriter fw = new FileWriter("log.txt", true);
                     BufferedWriter bw = new BufferedWriter(fw);
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd '|' HH:mm:ss ");
                     Date date = new Date(System.currentTimeMillis());
-                    String date_data = formatter.format(date);
+                    String dateData = formatter.format(date);
                     String IP = client.getInetAddress().toString().substring(1); // Delete the prefix "/"
-                    String log = date_data + '|' + IP + '|' + ' ' + line + '\n';
+                    String log = dateData + '|' + IP + '|' + ' ' + line + '\n';
                     bw.write(log);
                     bw.close();
                     if (line.equals("totals")) {
