@@ -5,12 +5,13 @@ import java.net.Socket;
 public class Client {
     private Socket client = null;
 
-    public static void main(String[] args) {
+
+	public static void main(String[] args) {
         Client test = new Client();
-        test.starClient(args);
+        test.startClient(args);
     }
 
-    public void starClient(String[] args) {
+    public void startClient(String[] args) {
 
         try {
             client = new Socket("localhost", 5000);

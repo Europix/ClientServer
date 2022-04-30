@@ -3,14 +3,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.*;
 
 public class Server {
+	static ExecutorService service = null;
     public static void main(String[] args) {
         Server test = new Server();
-        test.starServer(args);
+		service = Executors.newFixedThreadPool(25); // Thread Pool fixed to 25.
+        service.submit(() -> test.startServer(args));
+        // test.startServer(args);
     }
 
-    public void starServer(String[] args) {
+    public void startServer(String[] args) {
         int List_Number;
         int Max_Member;
         if (Integer.parseInt(args[0]) <= 0 || Integer.parseInt(args[1]) <= 0) {
@@ -42,8 +46,12 @@ public class Server {
                 int count;
                 File file = new File("log.txt");
                 //if file doesnt exists, then create it
-                if (!file.exists()) {
-                    boolean success = file.createNewFile();
+				boolean success;
+				if (!file.exists()) {
+                    success = file.createNewFile();
+                    if(success){
+                    	System.out.println("Generating New Log File\n");
+					}
                 }
                 if (line != null) {
                     FileWriter fw = new FileWriter("log.txt", true);
